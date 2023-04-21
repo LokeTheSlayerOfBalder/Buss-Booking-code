@@ -15,6 +15,7 @@ public class Projekt2 {
     static Scanner scanner = new Scanner(System.in);
 
     // int[] birthDates är den som vi kommer att använda som index i alla bokningar (see addPassangers metoden)
+    //Alla arrays som används för att hålla koll på information finns här så att metoderna kan nå dem
     public static LocalDate[] birthDates = new LocalDate[21];
     public static String[] firstNames = new String[21];
     public static String[] lastNames = new String[21];
@@ -98,7 +99,7 @@ public class Projekt2 {
         }
         LocalDate now = LocalDate.now();
         int age = Period.between(now, passangerBday).getYears();
-        //LocalDate.now() och Period.between() är funktioner frånimport java.time.LocalDate; och import java.time.Period; som håller koll på tid och datum
+        //LocalDate.now() och Period.between() är funktioner från import java.time.LocalDate; och import java.time.Period; som håller koll på tid och datum
         int seat = bookSeat(passangerBday);
         if (seat < birthDates.length) {
             System.out.println("You have successfully booked seat nr " + (seat + 1));
@@ -143,36 +144,83 @@ public class Projekt2 {
     }
 
     public static void showSeats() {
-        for(int i = 0; i < birthDates.length; i++){
-            if(birthDates[i] != null){
-            System.out.println("Seat: " + (i + 1) + ", Name: " + firstNames[i] + " " + lastNames[i] + (", Birthdate: " + birthDates[i] + (", Gender: " + genders[i]) ));
-            }
-            else{
+        for (int i = 0; i < birthDates.length; i++) {
+            if (birthDates[i] != null) {
+                System.out.println("Seat: " + (i + 1) + ", Name: " + firstNames[i] + " " + lastNames[i] + (", Birthdate: " + birthDates[i] + (", Gender: " + genders[i])));
+            } else {
                 System.out.println("Seat: " + (i + 1) + " is empty");
             }
         }
     }
 
+    public static void findPassengerName(String firstname, String lastname) {
+        for (int i = 0; i <= birthDates.length; i++) {
+            if (firstNames[i].equals(firstname) && lastNames[i].equals(lastname)) {
+                System.out.println("Seat: " + (i + 1) + firstNames[i] + " " + lastNames[i] + ", " + birthDates[i] + ", " + genders[i]);
+            }
+        }
+        for (int i = 0; i <= birthDates.length; i++) {
+            if ((firstNames[i].equals(firstname) && !lastNames[i].equals(lastname))) {
+                System.out.println("Seat: " + (i + 1) + firstNames[i] + " " + lastNames[i] + ", " + birthDates[i] + ", " + genders[i]);
+            }
+            if ((lastNames[i].equals(lastname) && !firstNames[i].equals(firstname))) {
+                System.out.println("Seat: " + (i + 1) + firstNames[i] + " " + lastNames[i] + ", " + birthDates[i] + ", " + genders[i]);
+            }
+        }
+    }
+
+    public static void findPassengerNumber() {
+
+    }
+
     public static void main(String[] args) {
 
-        System.out.println("1. Add a passenger");
-        System.out.println("2. Show free spaces");
-        System.out.println("3. Show earnings");
-        System.out.println("4. Quit");
+        boolean run = true;
 
-       
+        while (run) {
+            System.out.println("1. Add a passenger");
+            System.out.println("2. remove passenger");
+            System.out.println("3. Show free spaces");
+            System.out.println("4. Find passenger");
+            System.out.println("5. Show earnings");
+            System.out.println("6. Quit");
 
-        System.out.print("Choose one of the options above: ");
-        int choice = scanInt(1, 4);
+            System.out.print("Choose one of the options above: ");
+            int choice = scanInt(1, 4);
 
-        switch (choice) {
-            case 1 -> {
-                addPassenger();
+            switch (choice) {
+                case 1 -> {
+                    addPassenger();
+                }
+                case 2 -> {
+
+                }
+                case 3 -> {
+                    showSeats();
+                }
+                case 4 -> {
+                    System.out.println("Search for:");
+                    System.out.println("1. Passenger name");
+                    System.out.println("2. Passenger birthdate");
+                    int choice2 = scanInt(1, 2);
+
+                    switch (choice2) {
+                        case 1 -> {
+                            System.out.print("Passengers firstname:");
+                            String firstname = scanString();
+                            System.out.print("Passenger lastname:");
+                            String lastname = scanString();
+                            findPassengerName(firstname, lastname);
+                        }
+                        case 2 -> {
+                            findPassengerNumber();
+                        }
+                    }
+                    findPassengerNumber();
+                }
+
             }
-            case 2 -> {
-                showSeats();
-            }
-
         }
+
     }
 }
