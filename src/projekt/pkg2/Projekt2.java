@@ -148,21 +148,21 @@ public class Projekt2 {
 
     }
 
-    public static void removePassenger(){
-        System.out.println("Passenger to be removed");
-        System.out.println("Search for:");
-        System.out.println("1. Name");
-        System.out.println("2. Birthdate");
-        
-        int method = scanInt(1, 2);
-        
-        switch (method) {
-            case 1 -> {
-                
-            }
+    public static void removePassenger() {
+        System.out.println("Passenger seat:");
+        int seat = scanInt(1, 21) - 1;
+        if (birthDates[seat] == null) {
+            System.out.println("Seat already empty");
+        } else {
+            System.out.println("Passenger " + firstNames[seat] + " " + lastNames[seat] + " removed");
+            birthDates[seat] = null;
+            firstNames[seat] = null;
+            lastNames[seat] = null;
+            genders[seat] = null;
+
         }
     }
-    
+
     public static void showSeats() {
         for (int i = 0; i < birthDates.length; i++) {
             if (birthDates[i] != null) {
@@ -173,12 +173,12 @@ public class Projekt2 {
         }
     }
 
-    public static void findPassengerName(String firstname, String lastname) {
+    public static int findPassengerName(String firstname, String lastname) {
         for (int i = 0; i < birthDates.length; i++) {
             if (birthDates[i] != null) {
                 if (firstNames[i].equalsIgnoreCase(firstname) && lastNames[i].equalsIgnoreCase(lastname)) {
                     System.out.println("Seat: " + (i + 1) + ", " + firstNames[i] + " " + lastNames[i] + ", " + birthDates[i] + ", " + genders[i]);
-
+                    return
                 }
             }
             for (i = 0; i < birthDates.length; i++) {
@@ -219,7 +219,7 @@ public class Projekt2 {
                     addPassenger();
                 }
                 case 2 -> {
-
+                    removePassenger();
                 }
                 case 3 -> {
                     showSeats();
