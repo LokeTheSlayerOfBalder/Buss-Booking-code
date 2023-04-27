@@ -67,21 +67,7 @@ public class Projekt2 {
         return name;
     }
 
-    public static int bookSeat(LocalDate date) {
-        int seat = 0;
-        boolean found = false;
-        do {
-            if (birthDates[seat] == null) {
-                found = true;
-                birthDates[seat] = date;
-            } else {
-                seat++;
-            }
-        } while (!found && seat < birthDates.length);
-        return seat;
-    }
-
-    public static void addPassenger() {
+    public static LocalDate date() {
         LocalDate passangerBday = null;
         while (passangerBday == null) {
             System.out.println("Enter passenger birthdate:");
@@ -97,6 +83,25 @@ public class Projekt2 {
                 System.out.println("Invalid date! Please try again");
             }
         }
+        return passangerBday;
+    }
+
+    public static int bookSeat(LocalDate date) {
+        int seat = 0;
+        boolean found = false;
+        do {
+            if (birthDates[seat] == null) {
+                found = true;
+                birthDates[seat] = date;
+            } else {
+                seat++;
+            }
+        } while (!found && seat < birthDates.length);
+        return seat;
+    }
+
+    public static void addPassenger() {
+        LocalDate passangerBday = date();
         LocalDate now = LocalDate.now();
         int age = Period.between(now, passangerBday).getYears();
         //LocalDate.now() och Period.between() är funktioner från import java.time.LocalDate; och import java.time.Period; som håller koll på tid och datum
@@ -143,6 +148,21 @@ public class Projekt2 {
 
     }
 
+    public static void removePassenger(){
+        System.out.println("Passenger to be removed");
+        System.out.println("Search for:");
+        System.out.println("1. Name");
+        System.out.println("2. Birthdate");
+        
+        int method = scanInt(1, 2);
+        
+        switch (method) {
+            case 1 -> {
+                
+            }
+        }
+    }
+    
     public static void showSeats() {
         for (int i = 0; i < birthDates.length; i++) {
             if (birthDates[i] != null) {
@@ -154,23 +174,29 @@ public class Projekt2 {
     }
 
     public static void findPassengerName(String firstname, String lastname) {
-        for (int i = 0; i <= birthDates.length; i++) {
-            if (firstNames[i].equals(firstname) && lastNames[i].equals(lastname)) {
-                System.out.println("Seat: " + (i + 1) + firstNames[i] + " " + lastNames[i] + ", " + birthDates[i] + ", " + genders[i]);
+        for (int i = 0; i < birthDates.length; i++) {
+            if (birthDates[i] != null) {
+                if (firstNames[i].equalsIgnoreCase(firstname) && lastNames[i].equalsIgnoreCase(lastname)) {
+                    System.out.println("Seat: " + (i + 1) + ", " + firstNames[i] + " " + lastNames[i] + ", " + birthDates[i] + ", " + genders[i]);
+
+                }
             }
-        }
-        for (int i = 0; i <= birthDates.length; i++) {
-            if ((firstNames[i].equals(firstname) && !lastNames[i].equals(lastname))) {
-                System.out.println("Seat: " + (i + 1) + firstNames[i] + " " + lastNames[i] + ", " + birthDates[i] + ", " + genders[i]);
-            }
-            if ((lastNames[i].equals(lastname) && !firstNames[i].equals(firstname))) {
-                System.out.println("Seat: " + (i + 1) + firstNames[i] + " " + lastNames[i] + ", " + birthDates[i] + ", " + genders[i]);
+            for (i = 0; i < birthDates.length; i++) {
+                if (birthDates[i] != null) {
+                    if ((firstNames[i].equalsIgnoreCase(firstname) && !lastNames[i].equalsIgnoreCase(lastname)) || (!firstNames[i].equalsIgnoreCase(firstname) && lastNames[i].equalsIgnoreCase(lastname))) {
+                        System.out.println("Seat: " + (i + 1) + ", " + firstNames[i] + " " + lastNames[i] + ", " + birthDates[i] + ", " + genders[i]);
+                    }
+                }
             }
         }
     }
 
-    public static void findPassengerNumber() {
-
+    public static void findPassengerNumber(LocalDate number) {
+        for (int i = 0; i <= birthDates.length; i++) {
+            if (birthDates[i] == (number)) {
+                System.out.println("Seat: " + (i + 1) + " " + firstNames[i] + " " + lastNames[i] + ", " + birthDates[i] + ", " + genders[i]);
+            }
+        }
     }
 
     public static void main(String[] args) {
@@ -213,14 +239,13 @@ public class Projekt2 {
                             findPassengerName(firstname, lastname);
                         }
                         case 2 -> {
-                            findPassengerNumber();
+                            System.out.print("Passanger birthdate:");
+                            LocalDate date = date();
+                            findPassengerNumber(date);
                         }
                     }
-                    findPassengerNumber();
                 }
-
             }
         }
-
     }
 }
