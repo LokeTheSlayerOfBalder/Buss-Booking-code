@@ -68,8 +68,8 @@ public class Projekt2 {
     }
 
     public static LocalDate date() {
-        LocalDate passangerBday = null;
-        while (passangerBday == null) {
+        LocalDate passengerBday = null;
+        while (passengerBday == null) {
             System.out.println("Enter passenger birthdate:");
             System.out.println("Use YYYY-MM-DD formating");
             String dateString = scanString();
@@ -77,13 +77,13 @@ public class Projekt2 {
             /*DateTimeFormatter och DateTimeFormatter.ofPattern låter programmet kontrollera att man använder rätt format av datum
             där yyyy menar år, MM menar datum med två siffror (så att januari blir 01 istället för 1) och dd menar dagar*/
             try {
-                passangerBday = LocalDate.parse(dateString, formatter);
+                passengerBday = LocalDate.parse(dateString, formatter);
             } catch (DateTimeParseException e) {
                 //DateTimeParseExeption e är ett fel som kommer om man har använt fel format
                 System.out.println("Invalid date! Please try again");
             }
         }
-        return passangerBday;
+        return passengerBday;
     }
 
     public static int bookSeat(LocalDate date) {
@@ -133,33 +133,52 @@ public class Projekt2 {
         System.out.println("3. Other");
         int genderChoice = scanInt(1, 3);
         switch (genderChoice) {
-            case 1:
+            case 1 -> {
                 genders[seat] = "Male";
-                break;
-            case 2:
+            }
+            case 2 -> {
                 genders[seat] = "Female";
-                break;
-            case 3:
+            }
+            case 3 -> {
                 genders[seat] = "Other";
-                break;
-            default:
-                break;
+            }
         }
 
     }
 
     public static void removePassenger() {
-        System.out.println("Passenger seat:");
-        int seat = scanInt(1, 21) - 1;
-        if (birthDates[seat] == null) {
-            System.out.println("Seat already empty");
-        } else {
-            System.out.println("Passenger " + firstNames[seat] + " " + lastNames[seat] + " removed");
-            birthDates[seat] = null;
-            firstNames[seat] = null;
-            lastNames[seat] = null;
-            genders[seat] = null;
 
+        System.out.println("search passenger:");
+        System.out.println("1. Name");
+        System.out.println("2. Birthdate");
+        int choice = scanInt(1, 2);
+
+        switch (choice) {
+            case 1 -> {
+                
+            }
+            case 2 -> {
+
+                LocalDate passengerBday = date();
+                LocalDate now = LocalDate.now();
+                int age = Period.between(now, passengerBday).getYears();
+                if (2023 - age >= 0 && 2023 - age < 18) {
+                    childBookings--;
+                } else if (2023 - age >= 18 && 2023 - age < 69) {
+                    adultBookings--;
+                } else {
+                    oldBookings--;
+                }
+                for (int i = 0; i < birthDates.length; i++) {
+                    if (passengerBday.equals(birthDates[i])) {
+                        System.out.println("Seat " + (i + 1) + ": " + firstNames[i] + " " + lastNames[i] + " has been removed");
+                        birthDates[i] = null;
+                        firstNames[i] = null;
+                        lastNames[i] = null;
+                        genders[i] = null;
+                    }
+                }
+            }
         }
     }
 
@@ -173,12 +192,12 @@ public class Projekt2 {
         }
     }
 
-    public static int findPassengerName(String firstname, String lastname) {
+    public static void findPassengerName(String firstname, String lastname) {
         for (int i = 0; i < birthDates.length; i++) {
             if (birthDates[i] != null) {
                 if (firstNames[i].equalsIgnoreCase(firstname) && lastNames[i].equalsIgnoreCase(lastname)) {
                     System.out.println("Seat: " + (i + 1) + ", " + firstNames[i] + " " + lastNames[i] + ", " + birthDates[i] + ", " + genders[i]);
-                    return
+
                 }
             }
             for (i = 0; i < birthDates.length; i++) {
@@ -244,6 +263,12 @@ public class Projekt2 {
                             findPassengerNumber(date);
                         }
                     }
+                }
+                case 5 -> {
+
+                }
+                case 6 -> {
+
                 }
             }
         }
