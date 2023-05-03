@@ -9,6 +9,7 @@ import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.Scanner;
 import java.util.Date;
+import java.util.List;
 
 public class Projekt2 {
 
@@ -55,7 +56,7 @@ public class Projekt2 {
 
             try {
                 name = scanner.nextLine();
-                if (name != "") {
+                if (!"".equals(name)) {
                     success = true;
                 }
             } catch (Exception e) {
@@ -155,7 +156,28 @@ public class Projekt2 {
 
         switch (choice) {
             case 1 -> {
-                
+                String passengerFirstName = scanString();
+                String passengerLastName = scanString();
+                for (int i = 0; i < birthDates.length; i++) {
+                    if (firstNames[i].equalsIgnoreCase(passengerFirstName) && lastNames[i].equalsIgnoreCase(passengerLastName)) {
+
+                        System.out.println("Passenger " + firstNames[i] + " " + lastNames[i] + " has been removed");
+
+                    } else if ((lastNames[i].equalsIgnoreCase(passengerLastName) || firstNames[i].equalsIgnoreCase(passengerFirstName))) {
+                        System.out.println("Remove passenger " + firstNames[i] + " " + lastNames[i] + "?");
+                        System.out.println("1. Remove");
+                        System.out.println("2. Cancel");
+                        choice = scanInt(1, 2);
+                        if (choice == 1) {
+                            System.out.println("Seat " + (i + 1) + ": " + firstNames[i] + " " + lastNames[i] + " has been removed");
+                            birthDates[i] = null;
+                            firstNames[i] = null;
+                            lastNames[i] = null;
+                            genders[i] = null;
+                        }
+
+                    }
+                }
             }
             case 2 -> {
 
@@ -180,6 +202,26 @@ public class Projekt2 {
                 }
             }
         }
+    }
+
+    public static double sumPrice(LocalDate[] list, int index) {
+        if (index == list.length) {
+            return 0;
+        }
+
+        double price = 0;
+        if(list[index] != null){
+        if (Period.between(LocalDate.now(), list[index]).getYears() > 69) {
+            price = 200;
+        } else if (Period.between(LocalDate.now(), list[index]).getYears() > 18) {
+            price = 299.9;
+        } else {
+            price = 149.9;
+        }
+        }
+        double result = price + sumPrice(list, ++index);
+        return result;
+
     }
 
     public static void showSeats() {
@@ -211,11 +253,32 @@ public class Projekt2 {
     }
 
     public static void findPassengerNumber(LocalDate number) {
-        for (int i = 0; i <= birthDates.length; i++) {
-            if (birthDates[i] == (number)) {
-                System.out.println("Seat: " + (i + 1) + " " + firstNames[i] + " " + lastNames[i] + ", " + birthDates[i] + ", " + genders[i]);
+        for (int i = 0; i < birthDates.length; i++) {
+            if (birthDates[i] != null) {
+                if (birthDates[i].equals(number)) {
+                    System.out.println("Seat: " + (i + 1) + " " + firstNames[i] + " " + lastNames[i] + ", " + birthDates[i] + ", " + genders[i]);
+                }
             }
         }
+    }
+
+    public static int[] getSortedIndexes(LocalDate[] dates) {
+        int[] indexes = new int[dates.length];
+        for (int i = 0; i < indexes.length; i++) {
+            indexes[i] = i;
+        }
+
+        for (int i = 0; i < indexes.length - 1; i++) {
+            for (int j = i + 1; j < indexes.length; j++) {
+                if (dates[indexes[i]] != null && dates[indexes[j]] != null && dates[indexes[i]].compareTo(dates[indexes[j]]) > 0) {
+                    int temp = indexes[i];
+                    indexes[i] = indexes[j];
+                    indexes[j] = temp;
+                }
+            }
+        }
+
+        return indexes;
     }
 
     public static void main(String[] args) {
@@ -228,10 +291,11 @@ public class Projekt2 {
             System.out.println("3. Show free spaces");
             System.out.println("4. Find passenger");
             System.out.println("5. Show earnings");
-            System.out.println("6. Quit");
+            System.out.println("6. Sort list by age");
+            System.out.println("7. Quit");
 
             System.out.print("Choose one of the options above: ");
-            int choice = scanInt(1, 4);
+            int choice = scanInt(1, 7);
 
             switch (choice) {
                 case 1 -> {
@@ -265,10 +329,20 @@ public class Projekt2 {
                     }
                 }
                 case 5 -> {
+                    System.out.println("Earnings = " + sumPrice(birthDates, 0) + "kr");
 
                 }
                 case 6 -> {
+                    int[] indexes = getSortedIndexes(birthDates);
+                    for (int i = 0; i < indexes.length; i++) {
+                        if (birthDates[indexes[i]] != null) {
+                            System.out.println(firstNames[indexes[i]] + " " + lastNames[indexes[i]] + " " + birthDates[indexes[i]] + " " + genders[indexes[i]]);
+                        }
+                    }
 
+                }
+                case 7 -> {
+                    run = false;
                 }
             }
         }
