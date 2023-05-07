@@ -1,15 +1,10 @@
 package projekt.pkg2;
 
-import java.text.DateFormat;
-import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.Arrays;
 import java.util.Scanner;
-import java.util.Date;
-import java.util.List;
 
 public class Projekt2 {
 
@@ -22,9 +17,7 @@ public class Projekt2 {
     public static String[] lastNames = new String[21];
     public static String[] genders = new String[21];
     public static int[] phone = new int[21];
-    public static int oldBookings;
-    public static int adultBookings;
-    public static int childBookings;
+    public static int[] windows = new int[]{1, 0, 0, 4, 5, 0, 0, 8, 9, 0, 0, 12, 13, 0, 0, 16, 17, 0, 0, 0, 21};
 
     public static int scanInt(int interval1, int interval2) {
         //Denna funktion låter en endast skriva in en siffra i en interval. Annars levererar den ett fel medelande och man får försöka igen.
@@ -90,14 +83,34 @@ public class Projekt2 {
     public static int bookSeat(LocalDate date) {
         int seat = 0;
         boolean found = false;
-        do {
-            if (birthDates[seat] == null) {
-                found = true;
-                birthDates[seat] = date;
-            } else {
-                seat++;
+        System.out.println("Donyou want a window seat?");
+        System.out.println("1. Yes");
+        System.out.println("2. No");
+        int choice = scanInt(1, 2);
+        switch (choice) {
+            case 1 -> {
+                do {
+                    if (birthDates[seat] == null && windows[seat] != 0) {
+                        found = true;
+                        birthDates[seat] = date;
+                    } else {
+                        seat++;
+                    }
+                } while (!found && seat < birthDates.length);
+
             }
-        } while (!found && seat < birthDates.length);
+            case 2 -> {
+                do {
+                    if (birthDates[seat] == null && windows[seat] == 0) {
+                        found = true;
+                        birthDates[seat] = date;
+                    } else {
+                        seat++;
+                    }
+                } while (!found && seat < birthDates.length);
+
+            }
+        }
         return seat;
     }
 
@@ -111,13 +124,6 @@ public class Projekt2 {
             System.out.println("You have successfully booked seat nr " + (seat + 1));
         } else {
             System.out.println("No available seats");
-        }
-        if (2023 - age >= 0 && 2023 - age < 18) {
-            childBookings++;
-        } else if (2023 - age >= 18 && 2023 - age < 69) {
-            adultBookings++;
-        } else {
-            oldBookings++;
         }
 
         System.out.print("Enter passengers firstname: ");
@@ -159,6 +165,7 @@ public class Projekt2 {
                 String passengerFirstName = scanString();
                 String passengerLastName = scanString();
                 for (int i = 0; i < birthDates.length; i++) {
+                    if(birthDates[i] != null){
                     if (firstNames[i].equalsIgnoreCase(passengerFirstName) && lastNames[i].equalsIgnoreCase(passengerLastName)) {
 
                         System.out.println("Passenger " + firstNames[i] + " " + lastNames[i] + " has been removed");
@@ -177,20 +184,12 @@ public class Projekt2 {
                         }
 
                     }
+                    }
                 }
             }
             case 2 -> {
 
                 LocalDate passengerBday = date();
-                LocalDate now = LocalDate.now();
-                int age = Period.between(now, passengerBday).getYears();
-                if (2023 - age >= 0 && 2023 - age < 18) {
-                    childBookings--;
-                } else if (2023 - age >= 18 && 2023 - age < 69) {
-                    adultBookings--;
-                } else {
-                    oldBookings--;
-                }
                 for (int i = 0; i < birthDates.length; i++) {
                     if (passengerBday.equals(birthDates[i])) {
                         System.out.println("Seat " + (i + 1) + ": " + firstNames[i] + " " + lastNames[i] + " has been removed");
@@ -210,14 +209,14 @@ public class Projekt2 {
         }
 
         double price = 0;
-        if(list[index] != null){
-        if (Period.between(LocalDate.now(), list[index]).getYears() > 69) {
-            price = 200;
-        } else if (Period.between(LocalDate.now(), list[index]).getYears() > 18) {
-            price = 299.9;
-        } else {
-            price = 149.9;
-        }
+        if (list[index] != null) {
+            if (Period.between(LocalDate.now(), list[index]).getYears() > 69) {
+                price = 200;
+            } else if (Period.between(LocalDate.now(), list[index]).getYears() > 18) {
+                price = 299.9;
+            } else {
+                price = 149.9;
+            }
         }
         double result = price + sumPrice(list, ++index);
         return result;
